@@ -8,11 +8,15 @@ const startup = event => {
 
   if (event.target) {
     event.target.removeEventListener("mousedown", _startup);
+    event.target.removeEventListener("touchstart", _startup, {
+      passive: false
+    });
   }
 };
 
 const start = (ref: React.RefObject<HTMLDivElement>) => {
   ref.current.addEventListener("mousedown", _startup);
+  ref.current.addEventListener("touchstart", _startup, { passive: false });
 };
 
 const addLayoutEffect = (ref: React.RefObject<HTMLDivElement>) => {
@@ -23,13 +27,16 @@ const addLayoutEffect = (ref: React.RefObject<HTMLDivElement>) => {
   };
 };
 
-let i = -1;
-
 interface IDragSelectProps {
   top: React.ReactText;
+  id: string;
 }
 
-const DragSelectContainer: React.FC<IDragSelectProps> = ({ children, top }) => {
+const DragSelectContainer: React.FC<IDragSelectProps> = ({
+  children,
+  top,
+  id
+}) => {
   const ref = React.createRef<HTMLDivElement>();
   if (isBrowser) {
     React.useLayoutEffect(() => {
@@ -37,11 +44,9 @@ const DragSelectContainer: React.FC<IDragSelectProps> = ({ children, top }) => {
     }, []);
   }
 
-  i++;
   return (
     <div
-      key={`foo${i}`}
-      id={`container${i}`}
+      id={id}
       style={{
         width: "300px",
         height: "300px",
