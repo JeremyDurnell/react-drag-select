@@ -1,17 +1,42 @@
 import * as React from "react";
-import { IDragSelectProps } from "./drag-select";
+import { isBrowser } from "../../utils";
 
-interface IDragSelectContainerProps extends IDragSelectProps {
-  _ref: React.RefObject<HTMLDivElement>;
-}
+const _startup = event => startup(event);
+
+const startup = event => {
+  console.log("startup");
+
+  if (event.target) {
+    event.target.removeEventListener("mousedown", _startup);
+  }
+};
+
+const start = (ref: React.RefObject<HTMLDivElement>) => {
+  ref.current.addEventListener("mousedown", _startup);
+};
+
+const addLayoutEffect = (ref: React.RefObject<HTMLDivElement>) => {
+  console.log("componentDidMount", ref);
+  start(ref);
+  return () => {
+    console.log("componentWillUnmount");
+  };
+};
 
 let i = -1;
 
-const DragSelectContainer: React.FC<IDragSelectContainerProps> = ({
-  children,
-  top,
-  _ref
-}) => {
+interface IDragSelectProps {
+  top: React.ReactText;
+}
+
+const DragSelectContainer: React.FC<IDragSelectProps> = ({ children, top }) => {
+  const ref = React.createRef<HTMLDivElement>();
+  if (isBrowser) {
+    React.useLayoutEffect(() => {
+      return addLayoutEffect(ref);
+    }, []);
+  }
+
   i++;
   return (
     <div
@@ -27,7 +52,7 @@ const DragSelectContainer: React.FC<IDragSelectContainerProps> = ({
         top,
         left: "15%"
       }}
-      ref={_ref}
+      ref={ref}
     >
       {children}
     </div>
