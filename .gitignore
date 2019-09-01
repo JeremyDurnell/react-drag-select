@@ -1,0 +1,30 @@
+# Dependency Related
+node_modules/
+.next/
+build/
+.yalc
+
+.idea/
+# Test Related
+coverage
+clover.xml
+lcov-*
+lcov.info
+jest.json
+yarn-error.log
+
+# Storybook 
+.cache-loader
+.storybook-dist
+
+# Symlink Related
+.eslintrc.js
+settings.json
+.vscode
+.DS_Store
+
+# Cypress
+/cypress
+
+# Dev Artifacts
+*.orig
