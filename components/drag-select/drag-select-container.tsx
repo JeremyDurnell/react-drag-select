@@ -1,21 +1,29 @@
 import * as React from "react";
 import { isBrowser } from "../../utils";
-import { helpers } from "./helpers";
+import Helpers from "./helpers";
 
 interface IDragSelectProps {
-  top: React.ReactText;
   id: string;
+  _ref: React.RefObject<HTMLDivElement>;
+  top: React.ReactText;
+}
+
+interface ICoords {
+  x: number;
+  y: number;
 }
 
 const DragSelectContainer: React.FC<IDragSelectProps> = ({
   children,
+  id,
   top,
-  id
+  _ref
 }) => {
   const _startup = event => startup(event);
   const _handleMove = event => handleMove(event);
   const _end = event => reset(event);
   const ref = React.createRef<HTMLDivElement>();
+  let initialCursorPos: ICoords = { x: 0, y: 0 };
 
   const start = () => {
     ref.current.addEventListener("mousedown", _startup);
@@ -23,14 +31,17 @@ const DragSelectContainer: React.FC<IDragSelectProps> = ({
   };
 
   const startup = event => {
-    console.log("startup");
+    if (ref.current) {
+      initialCursorPos = Helpers._getCursorPos(event, ref.current);
+      console.log("initialCursorPos", initialCursorPos);
+    }
 
     // touchmove handler
     if (event.type === "touchstart")
       // Call preventDefault() to prevent double click issue, see https://github.com/ThibaultJanBeyer/DragSelect/pull/29 & https://developer.mozilla.org/vi/docs/Web/API/Touch_events/Supporting_both_TouchEvent_and_MouseEvent
       event.preventDefault();
 
-    if (helpers._isRightClick(event)) return;
+    if (Helpers._isRightClick(event)) return;
 
     if (ref.current) {
       ref.current.removeEventListener("mousedown", _startup);
@@ -45,12 +56,29 @@ const DragSelectContainer: React.FC<IDragSelectProps> = ({
   };
 
   const handleMove = event => {
-    console.log("handle Move");
+    if (!_ref.current) return;
+
+    const selectorPos = Helpers._getPosition(
+      event,
+      ref.current,
+      initialCursorPos
+    );
+    _ref.current.style.display = "block";
+    Helpers._updatePos(_ref.current, selectorPos);
   };
 
   const reset = event => {
     document.removeEventListener("mouseup", _end);
     document.removeEventListener("touchend", _end);
+
+    const box = {
+      x: _ref.current.style.left,
+      y: _ref.current.style.top,
+      w: _ref.current.style.width,
+      h: _ref.current.style.height
+    };
+
+    console.log("selected area", box);
 
     if (ref.current) {
       ref.current.removeEventListener("mousemove", _handleMove);
@@ -60,7 +88,7 @@ const DragSelectContainer: React.FC<IDragSelectProps> = ({
     }
   };
 
-  const addLayoutEffect = (ref: React.RefObject<HTMLDivElement>) => {
+  const addLayoutEffect = () => {
     console.log("componentDidMount", ref);
     start();
     return () => {
@@ -70,7 +98,7 @@ const DragSelectContainer: React.FC<IDragSelectProps> = ({
 
   if (isBrowser) {
     React.useLayoutEffect(() => {
-      return addLayoutEffect(ref);
+      return addLayoutEffect();
     }, []);
   }
 
@@ -82,9 +110,9 @@ const DragSelectContainer: React.FC<IDragSelectProps> = ({
         height: "300px",
         background: "rgba(0, 0, 0, 0.05)",
         border: "5px solid red",
-        position: "absolute",
-        overflow: "auto",
+        overflow: "none",
         top,
+        position: "absolute",
         left: "15%"
       }}
       ref={ref}
