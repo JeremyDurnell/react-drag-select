@@ -7,10 +7,13 @@ export default () => {
 
   return (
     <div>
-      <DragSelectContainer id="container-0" _ref={ref1} top="">
+      <DragSelectContainer id="container-0" _ref={ref1}>
         <DragSelect _ref={ref1} />
+        <div style={{ position: "absolute", bottom: "0", right: "0" }}>
+          TEXT
+        </div>
       </DragSelectContainer>
-      <DragSelectContainer id="container-1" _ref={ref2} top="350px">
+      <DragSelectContainer id="container-1" _ref={ref2}>
         <DragSelect _ref={ref2} />
       </DragSelectContainer>
     </div>

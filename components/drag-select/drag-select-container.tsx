@@ -5,7 +5,6 @@ import Helpers from "./helpers";
 interface IDragSelectProps {
   id: string;
   _ref: React.RefObject<HTMLDivElement>;
-  top: React.ReactText;
 }
 
 interface ICoords {
@@ -16,7 +15,6 @@ interface ICoords {
 const DragSelectContainer: React.FC<IDragSelectProps> = ({
   children,
   id,
-  top,
   _ref
 }) => {
   const _startup = event => startup(event);
@@ -111,9 +109,7 @@ const DragSelectContainer: React.FC<IDragSelectProps> = ({
         background: "rgba(0, 0, 0, 0.05)",
         border: "5px solid red",
         overflow: "none",
-        top,
-        position: "absolute",
-        left: "15%"
+        position: "relative"
       }}
       ref={ref}
     >

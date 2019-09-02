@@ -5,7 +5,8 @@ interface IProps {
 }
 
 const DragSelect: React.FC<IProps> = ({ _ref }) => {
-  // NOTE: position attribute must match container
+  // NOTE: position attribute must match container and it's recomended that it be explicit
+  // (i.e., always declared)
   return (
     <div
       className="ds-selector"
@@ -14,7 +15,7 @@ const DragSelect: React.FC<IProps> = ({ _ref }) => {
         border: "1px solid rgba(0, 0, 255, 0.45)",
         display: "none",
         pointerEvents: "none",
-        position: "absolute"
+        position: "relative"
       }}
       ref={_ref}
     ></div>
