@@ -1,3 +1,5 @@
+import { ICoords, IRectangle } from "./types";
+
 // Helpers
 //////////////////////////////////////////////////////////////////////////////////////
 
@@ -10,7 +12,7 @@ class Helpers {
    * @return {boolean}
    * @private
    */
-  _isRightClick(event) {
+  _isRightClick(event: any) {
     var isRightMB = false;
 
     if ("which" in event) {
@@ -24,7 +26,7 @@ class Helpers {
     return isRightMB;
   }
 
-  _getCursorPos(event, area) {
+  _getCursorPos(event: MouseEvent, area: HTMLElement) {
     if (!event) return { x: 0, y: 0 };
     const cPos = {
       // event.clientX/Y fallback for <IE8
@@ -40,7 +42,11 @@ class Helpers {
     };
   }
 
-  _getPosition(event, area, initialCursorPosition) {
+  _getPosition(
+    event: MouseEvent,
+    area: HTMLElement,
+    initialCursorPosition: ICoords
+  ) {
     const cursorPosNew = this._getCursorPos(event, area);
 
     let selectorPos = { x: 0, y: 0, w: 0, h: 0 };
@@ -68,7 +74,7 @@ class Helpers {
     return selectorPos;
   }
 
-  _updatePos(node, pos) {
+  _updatePos(node: HTMLElement, pos: ICoords & IRectangle) {
     node.style.left = pos.x + "px";
     node.style.top = pos.y + "px";
     node.style.width = pos.w + "px";
@@ -76,7 +82,7 @@ class Helpers {
     return node;
   }
 
-  getAreaRect(area) {
+  getAreaRect(area: HTMLElement | Document) {
     if (area === document) {
       var size = {
         y:
@@ -98,14 +104,14 @@ class Helpers {
       };
     }
 
-    const rect = area.getBoundingClientRect();
+    const rect = (area as HTMLElement).getBoundingClientRect();
     return {
       top: rect.top,
       left: rect.left,
       bottom: rect.bottom,
       right: rect.right,
-      width: area.clientWidth || rect.width,
-      height: area.clientHeight || rect.height
+      width: (area as HTMLElement).clientWidth || rect.width,
+      height: (area as HTMLElement).clientHeight || rect.height
     };
   }
 }
