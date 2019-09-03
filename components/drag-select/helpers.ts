@@ -26,13 +26,28 @@ class Helpers {
     return isRightMB;
   }
 
-  _getCursorPos(event: MouseEvent, area: HTMLElement) {
+  _lastTouch: TouchEvent | null = null;
+
+  _getCursorPos(event: MouseEvent | TouchEvent, area: HTMLElement) {
     if (!event) return { x: 0, y: 0 };
+
+    let typedEvent: MouseEvent | TouchEvent | Touch;
+
+    if (event != null && event.type !== "touchend") {
+      // _lastTouch is technically a singleton (cringe) - we won't support multi-touch
+      this._lastTouch = event as TouchEvent;
+    }
+
+    typedEvent = (event as TouchEvent).touches
+      ? this._lastTouch!.touches[0]
+      : (event as MouseEvent);
+
     const cPos = {
       // event.clientX/Y fallback for <IE8
-      x: event.pageX || event.clientX,
-      y: event.pageY || event.clientY
+      x: typedEvent.pageX || typedEvent.clientX,
+      y: typedEvent.pageY || typedEvent.clientY
     };
+
     const areaRect = this.getAreaRect(area || document);
 
     return {
@@ -43,7 +58,7 @@ class Helpers {
   }
 
   _getPosition(
-    event: MouseEvent,
+    event: MouseEvent | TouchEvent,
     area: HTMLElement,
     initialCursorPosition: ICoords
   ) {

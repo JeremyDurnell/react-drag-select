@@ -60,7 +60,7 @@ const DragSelectContainer: React.FC<IDragSelectProps> = ({
     if (!_ref.current) return;
 
     const selectorPos = Helpers._getPosition(
-      event as MouseEvent,
+      event,
       ref.current!,
       initialCursorPos
     );
