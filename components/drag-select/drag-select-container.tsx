@@ -39,10 +39,7 @@ const DragSelectContainer: React.FC<IDragSelectProps> = ({
     if (Helpers._isRightClick(event)) return;
 
     if (ref.current) {
-      initialCursorPos = Helpers._getCursorPos(
-        event as MouseEvent,
-        ref.current
-      );
+      initialCursorPos = Helpers._getCursorPos(event, ref.current);
       console.log("initialCursorPos", initialCursorPos);
 
       ref.current.removeEventListener("mousedown", _startup);
