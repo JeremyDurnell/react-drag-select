@@ -49,7 +49,7 @@ export default () => {
       >
         <DragSelect _ref={ref2} />
         <div style={{ position: "absolute", bottom: "0", right: "0" }}>
-          {selection1 ? selection2 : null}
+          {selection2 ? selection2 : null}
         </div>
       </DragSelectContainer>
     </div>
